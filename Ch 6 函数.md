@@ -121,6 +121,22 @@ cstdlib头文件定义了两个预处理变量：EXIT_FAILURE和EXIT_SUCCESS
 
 ### 6.3.3 返回数组指针
 
+数组不能被拷贝，因此函数不能返回数组。但是函数可以返回数组的指针或引用。可以使用类型别名来简化。
+
+```cpp
+typedef int arrT[10];
+using arrT=int[10];
+arrT* func(int i);
+```
+
+#### 声明一个返回数组指针的函数
+
+```cpp
+Type (*function(parameter_list)) [dimension]
+```
+
+
+
 ## 6.4 函数重载
 
 ## 6.5 特殊用途语言特性
