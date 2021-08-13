@@ -344,15 +344,135 @@ struct Sales_data
     Sales_data()=default;
     Sales_data(const std::string& s): bookNo(s) {}
     Sales_data(const std::string& s, unsigned n,, double p):bookNo(s), units_sold(n), revenue(p*n) {};
-    Sales_data()
+    Sales_data(std::istream&);
+    //
+    std::string isbn() const {return bookNo;}
+    Sales_data& combine(const Sales_data&);
+    double avg_price() const;
+    std::string bookNo;
+    unsigned units_sold=0;
+    double revenue=0.0;
 }
 ```
 
+##### =default的含义
 
+```cpp
+Sales_data()=default;
+```
+
+#### 构造函数初始值列表
+
+```cpp
+Sales_data(const std::string& s): bookNo(s) {}
+Sales_data(const std::string& s, unsigned n, double p): bookNo(s), units_sold(n), revenue(p*n) {}
+```
+
+构造函数初始值列表；
+
+#### 在类的外部定义构造函数
+
+```cpp
+Sales_data::Sales_data(std::istream& is)
+{
+    read(is, *this);
+}
+```
+
+### 7.1.5 拷贝、赋值和析构
+
+除了定义类的对象如何初始化之外，类还需要控制拷贝、赋值和销毁对象的时候发生的行为。
+
+#### 某些类不能依赖于合成的版本
+
+比如动态内存管理；
+
+值得注意的是，很多需要动态内存的类能够使用vector对象或者string对象来管理必要的存储空间，使用vector或者string的类能避免分配和释放内存带来的复杂性；
+
+进一步将，如果类包含vector或者string对象，则其拷贝、赋值和销毁的合成版本能够正常工作。当我们对含有vector成员的对象执行拷贝或者赋值操作的时候，vector类会设法拷贝或者复制成员中的元素。当这样的对象被销毁时，将销毁vector对象，也就是依次销毁vector中的每个元素。这一点与string类似；
 
 ## 7.2 访问控制与封装
 
+C++中使用访问说明符（access specifier）来加强类的封装性；
+
+- 定义在public说明符之后的成员在整个程序内可被访问，public成员定义类的接口；
+- 定义在private说明符之后的成员可以被类的成员函数访问，但是不能被使用该类的代码访问，private部分封装了类的实现细节；
+
+```cpp
+class Sales_data
+{
+public:
+    Sales_data()=default;
+    Sales_data(const std::string& s, unsigned n, double p):bookNo(s), units_sold(n), revenue(p*n) {}
+    Sales_data(const std::string& s): bookNo(s) {}
+    Sales_data(std::istream&);
+    std::string isbn() const {return bookNo};
+    Sales_data& combine(const Sales_data&);
+private:
+    double avg_price() const {return units_sold ? revenue/units_sold : 0;}
+    std::string bookNo;
+    unsigned units_sold=0;
+    double revenue=0.0;
+};
+```
+
+#### 使用class或者struct关键字
+
+struct和class的默认访问权限不同；
+
+类可以在它的第一个访问说明符之前定义成员，对这种成员的访问权限依赖于类定义的方式。如果我们使用struct关键字，则定义在第一个访问说明符之前的成员是public的；相反，如果我们使用class关键字，则这些成员是private的；
+
+### 7.2.1 友元
+
+类可以允许其他类或者函数访问它的非公有成员，方法是令其他类或者函数称为他的友元。如果类想把一个函数作为它的友元，则只需要增加一条以friend关键字开始的函数声明语句即可：
+
+```cpp
+class Sales_data
+{
+friend Sales_data add(const Sales_data&, const Sales_data&);
+friend std::istream& read(std::istream&, Sales_data&);
+friend std::ostream& print(std::ostream&, const Sales_data&);
+public:
+    Sales_data()=default;
+    Sales_data(const std::string& s, unsigned n, double p):bookNo(s), units_sold(n), revenue(p*n) {}
+    Sales_data(const std::string& s):bookNo(s) {}
+    Sales_data(std::istream&);
+    std::string isbn() const {return bookNo;}
+    Sales_data& combine(const Sales_data&);
+private:
+    std::string bookNo;
+    unsigned units_sold=0;
+    double revenue=0.0;
+};
+Sales_data add(const Sales_data&, const Sales_data&);
+std::istream& read(std::istream&, Sales_data&);
+std::ostream& print(std::ostream&, const Sales_data&);
+```
+
+封装的益处：
+
+- 确保用户代码不会无意间破坏封装对象的状态；
+- 被封装的具体实现细节可以随时改变，而无须调整用户级别的代码；
+
+#### 友元的声明
+
+友元的声明仅仅指定了访问权限，并不是一个普通意义上的函数声明。如果希望类的用户能够调用某个友元函数，那么必须在友元声明外再专门对函数进行一次声明；
+
+通常把友元的声明与类本身放置在同一个头文件中；
+
 ## 7.3 类的其他特征
+
+类型成员、类的成员和类内初始值、可变数据成员、内联成员函数、从成员函数返回\*this、关于如何定义并使用类类型以及友元类；
+
+#### 7.3.1 类成员再探
+
+定义一堆相互关联的类，分别是Screen和Window_mgr；
+
+#### 定义一个类型成员
+
+
+
+
 
 ## 7.4 类的作用域
 
