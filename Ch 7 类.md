@@ -470,11 +470,199 @@ std::ostream& print(std::ostream&, const Sales_data&);
 
 #### 定义一个类型成员
 
+除了定义数据和函数成员之外，类还可以自定义某种类型在类中的别名。由类定义的类型名字和其他成员一样存在访问限制；
 
+```cpp
+class Screen
+{
+public:
+    typdef std::string::size_type pos;
+private:
+    pos cursor=0;
+    pos height=0, width=0;
+    std::string contents;
+}
+```
 
+#### Screen类的成员函数
 
+```cpp
+class Screen
+{
+public:
+    typedef std::string::size_type pos;
+    Screen()=default;//因为Screen有另一个构造函数，所以必须有这个函数；
+    //cursor被其类内初始值初始化为0；
+    Screen(pos ht, pos wd, char c): height(ht), width(wd), contents(ht*wd, c) {}
+    char get() const {return contents[cursor];} //读取光标处的字符，隐式内联
+    inline char get(pos ht, pos wd) const;//显式内联
+    Screen& move(pos r, pos c);//能在之后被设为内联
+private:
+    pos cursor=0;
+    pos height=0,width=0;
+    std::string contents;
+};
+```
+
+#### 令成员作为内联函数
+
+我们可以在类的内部把inline作为声明的一部分显式地声明成员函数，同样的，也可能在类的外部用inline关键字修饰函数的定义；
+
+最好只在类外部定义的地方说明inline，这样可以使类更容易理解；
+
+#### 重载成员函数
+
+#### 可变数据成员
+
+有时我们希望能够修改类的某个数据成员。即使是在一个const成员函数内，可以通过在变量的声明中加入mutable关键字做到。
+
+一个可变函数成员（mutable data member）永远不会是const，即使它是const对象的成员。因此，一个const成员函数可以改变一个可变成员的值。
+
+```cpp
+class Screen()
+{
+public:
+    void some_member() const;
+private:
+    mutable size_t access_ctr; //即使在一个const对象内也能被修改
+};
+void Screen::some_member() const
+{
+    ++access_ctr; //保存一个计数值，用于记录成员函数被调用的次数
+}
+```
+
+#### 类数据成员的初始值
+
+```cpp
+class Window_mgr
+{
+private:
+	std::vector<Screen> screens{Screen(24,80,' ')};  
+};
+```
+
+当我们提供一个类内初始值的时候，必须以符号=或者花括号表示；
+
+### 7.3.2 返回\*this的成员函数
+
+```cpp
+class Screen()
+{
+public:
+    Screen& set(char);
+    Screen& set(pos, pos, char);
+    //其他成员和之前的版本一致
+};
+inline Screen& Screen::set(char c)
+{
+    contents[cursor]=c;
+    return *this;
+}
+inline Screen& Screen::set(pos r, por col, char ch)
+{
+    contents[r*width+col]=ch;//设置给定位置的新值
+    return *this;
+}
+```
+
+```cpp
+myScreen.move(4,0).set('#');
+```
+
+#### 从const成员函数返回\*this
+
+一个const成员函数如果以引用的形式返回\*this，那么它的返回类型将是常量引用；
+
+#### 基于const的重载
+
+当一个成员调用另一个成员的时候，this指针在其中隐式地从指向非常量的指针转换成指向常量的指针；
+
+#### 7.3.3 类类型
+
+#### 类的声明
+
+```cpp
+class Screen;
+```
+
+前向声明，不完全类型；
+
+不完全类型只能在非常有限的情况下使用：可以定义指向这种类型的指针或引用，也可以声明（但是不能定义）以不完全类型作为参数或者返回类型的函数；
+
+一个类的成员类型不能是类自己；
+
+一旦一个类的名字出现后，它就被认为是声明过了，因此类允许包含指向它自身类型的引用或指针：
+
+```cpp
+class Link_screen
+{
+    Screen window;
+    Link_screen* next;
+    Link_screen* prev;
+}
+```
+
+### 7.3.4 友元再探
+
+类还可以把其他的类定义成友元。也可以把其他类的成员函数定义成友元；
+
+#### 类之间的友元关系
+
+例如：Window_mgr类的某些成员函数可能需要访问它管理的Screen类的内部数据；那么Screen需要把Window_mgr指定成它的友元；
+
+```cpp
+class Screen
+{
+    friend class Window_mgr;
+};
+```
+
+如果一个类制定了友元类，则友元类的成员函数可以访问此类包括非公有成员函数在内的所有成员；
+
+```cpp
+class Window_mgr
+{
+public:
+    using ScreenIndex=std::vector<Screen>::size_type;
+    void clear(ScreenIndex);
+private:
+    std::vector<Screen> screens{Screen(24, 80, ' ')};
+};
+
+void Window_mgr::clear(ScreenIndex i)
+{
+    Screen& s=screens[i];
+    s.contents=string(s.height*s.width, ' ');
+}
+```
+
+友元关系不存在传递性，每个类负责控制自己的友元类或者友元函数；
+
+#### 令成员函数作为友元
+
+```cpp
+class Screen
+{
+    friend void Window_mgr::clear(ScreenIndex);
+};
+```
+
+想要令某个成员函数作为友元，必须仔细组织程序的结构；
+
+- 首先定义Window_mgr类，在其中声明clear函数，但是不能定义它。在clear使用Screen的成员之前必须先声明Screen；
+- 接下来定义Screen，包括对于clear的友元声明；
+- 最后定义clear，此时它才可以使用Screen的成员；
+
+#### 函数重载和友元
+
+#### 友元声明和作用域
+
+友元声明的作用是影响访问权限，它本身并非普通意义上的声明；
 
 ## 7.4 类的作用域
+
+
 
 ## 7.5 构造函数再探
 
