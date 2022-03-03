@@ -118,3 +118,84 @@ const double *const pip = &pi;
 
 ### 2.4.4 constexpr和常量表达式
 
+常量表达式是指值不会改变并且在编译过程就能得到计算结果的表达式。
+
+```cpp
+const int max_files = 20; //yes
+const int limit = max_files + 1; //yes
+int staff_size = 27; //no
+const int sz = get_size(); //no
+```
+
+尽管sz本身是一个常量，但它的具体值直到运行的时候才能获取到，所以也不是常量表达式。
+
+#### constexpr变量
+
+在一个复杂系统中，很难分辨一个初始值到底是不是常量表达式。 
+
+C++11新标准规定，允许将变量声明为constexpr类型以便由编译器来验证==变量的值==是否是一个常量表达式。
+
+声明为constexpr的变量一定是一个变量，并且必须用常量表达式初始化。
+
+一般来说，如果你认定变量是一个常量表达式，那就把它声明称constexpr。
+
+#### 字面值类型
+
+算数类型、引用、指针都属于字面量类型。
+
+常量表达式的值需要在编译的时候就得到计算，因此对声明constexpr时用到的类型必须有所限制。必须是字面值类型。
+
+尽管指针和引用都能定义成constexpr，但是它们的处世之却受到严格限制。一个constexpr指针的初始值必须是nullptr或者0，或者是存储于某个固定地址中的对象。
+
+#### 指针和constexpr
+
+### 2.5 处理类型
+
+### 2.5.1 类型别名
+
+### 2.5.2 auto类型说明符
+
+#### 符合类型、常量和auto
+
+编译器推断出来的auto类型有时候和初始值的类型并不完全一样。编译器会适当地改变结果类型使其更加符合初始化规则。
+
+auto一般会忽略掉顶层const，同时底层const则会保留下来。例如：
+
+```cc
+int i = 0;
+int& r = i;
+auto a = r;
+const int ci = i;
+const int& cr = ci;
+auto b = ci; //b是整数
+auto c = cr; //c是整数
+auto d = &i; //d是一个整形指针
+auto e = &ci; //e是一个指向整形常量的指针
+```
+
+如果希望推断出的auto类型是一个顶层const，需要明确指出：
+
+```cc
+const auto f = ci; //f是const int
+```
+
+还可以将引用的类型设为auto，此时原来的初始化规则仍然适用：
+
+```cc
+auto& g = ci; // g是一个整形常量引用
+auto& h = 42; //错误
+const auto& j = 42; //正确，可以为常量引用绑定字面值
+```
+
+### 2.5.3 decltype类型指示符
+
+#### decltype和引用
+
+## 自定义数据结构
+
+### 2.6.1 定义Sales_data类型
+
+### 2.6.2 使用Sales_data类
+
+### 2.6.3 编写自己的头文件
+
