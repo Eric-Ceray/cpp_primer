@@ -1,0 +1,14 @@
+/Users/tny/Desktop/cmake_learning/t3/build/CMakeFiles/edit_cache.dir
+/Users/tny/Desktop/cmake_learning/t3/build/CMakeFiles/rebuild_cache.dir
+/Users/tny/Desktop/cmake_learning/t3/build/CMakeFiles/list_install_components.dir
+/Users/tny/Desktop/cmake_learning/t3/build/CMakeFiles/install.dir
+/Users/tny/Desktop/cmake_learning/t3/build/CMakeFiles/install/local.dir
+/Users/tny/Desktop/cmake_learning/t3/build/CMakeFiles/install/strip.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/hello.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/hello_static.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/edit_cache.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/rebuild_cache.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/list_install_components.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/install.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/install/local.dir
+/Users/tny/Desktop/cmake_learning/t3/build/lib/CMakeFiles/install/strip.dir

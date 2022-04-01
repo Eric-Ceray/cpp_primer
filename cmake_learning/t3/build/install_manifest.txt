@@ -1,0 +1,5 @@
+/tmp/t3/usr/lib/libhello.1.2.dylib
+/tmp/t3/usr/lib/libhello.1.dylib
+/tmp/t3/usr/lib/libhello.dylib
+/tmp/t3/usr/lib/libhello.a
+/tmp/t3/usr/include/hello/hello.h
