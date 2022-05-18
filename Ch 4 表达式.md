@@ -2,6 +2,31 @@
 
 ## 4.1 基础
 
+### 4.1.1 基本概念
+
+#### 组合运算符和运算对象
+
+#### 运算对象转换
+
+#### 重载运算符
+
+#### 左值和右值
+
+两篇文章明白左值和右值：
+
+https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c
+
+https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
+
+一些注意：
+
+- 取地址符作用域一个左值运算对象，返回一个指向该运算对象的指针，这个指针是一个右值。
+- 内置解引用运算符、下标运算符、迭代器解引用运算符、string和vector的下表运算符的求职结果都是左值。
+- 赋值运算符需要一个非常量的左值作为其左侧运算对象，得到的结果也仍然是一个左值。
+- 内置类型和迭代器的递增递减运算符作用于左值运算对象。
+
+使用decltype的时候，如果作用于求值结果是左值的表达式，则得到一个引用类型。如果作用于求值结果为右值的表达式吗，则得到此值的类型。
+
 ## 4.2 算数运算符
 
 ## 4.3 逻辑和关系运算符
