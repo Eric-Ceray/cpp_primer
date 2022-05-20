@@ -73,23 +73,54 @@ https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beg
 cast-name<type>(expression);
 ```
 
+其中，type是转换的目标类型而expression是要转换的值。如果type是引用类型，则结果是左值。
 
+cast-name是static_cast，dynamic_cast，const_cast，reinterpret_cast中的一种。
 
-### 4.11.2 其他隐式类型转换
+dynamic_cast支持运行时类型识别。
 
-#### 数组转换成指针
+## static_cast
 
-#### 指针的转换
+任何具有名且定义的类型转换，只有不包含底层const，即可用static_const。
 
-#### 转换成布尔类型
+例如：
 
-#### 转换成常量
+```cc
+double slope = static_cast<double>(j) / i;
+```
 
-#### 类类型定义的转换
+例如：
 
-### 4.11.3 显示转换
+```cc
+double d = 0;
+void* p = &d; // 正确，任何非常量对象的地址都能存入void*
+double* dp = static_cast<double*>(p);
+```
 
+#### const_cast
 
+const_cast只能改变运算对象的底层const；
+
+```cc
+const char c = 'a';
+const char* pc = &c;
+char* p = const_cast<char*>(pc); // 正确，但是通过p写值是未定义的行为
+```
+
+对于将常量对象转换成非常量对象的行为，我们一般称其为“去掉const性质”（cast away the const）。
+
+const_cast通常用于有函数重载的上下文中。
+
+#### reinterpret_cast
+
+reinterpret_cast通常为运算对象的位模式提供较低层次上的重新解释。
+
+例如：
+
+```cc
+int* ip;
+char* pc = reinterpret_cast<char*> (ip);
+```
 
 ## 4.12 运算符优先级表
 
